@@ -1,0 +1,29 @@
+name: mon_projet_cours
+description: "Application de présentation des matières et cours d'une école (Flutter + Firebase)"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.6
+
+  # Firebase
+  firebase_core: any
+  firebase_auth: any
+  cloud_firestore: any
+
+  # State management
+  flutter_riverpod: ^2.6.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
