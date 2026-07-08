@@ -20,21 +20,103 @@ class MonApplication extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final couleurPrincipale = const Color(0xFF2E5EAA);
+    final colorScheme = ColorScheme.fromSeed(seedColor: couleurPrincipale);
 
     return MaterialApp(
       title: 'Matières & Cours - École',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: couleurPrincipale),
-        appBarTheme: const AppBarTheme(centerTitle: true, elevation: 0),
+        colorScheme: colorScheme,
         scaffoldBackgroundColor: const Color(0xFFF7F8FA),
-        cardTheme: CardThemeData(
-          elevation: 1,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+
+        // AppBar
+        appBarTheme: AppBarTheme(
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: colorScheme.surface,
+          foregroundColor: colorScheme.onSurface,
+          titleTextStyle: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: colorScheme.onSurface,
+          ),
         ),
+
+        // Cartes
+        cardTheme: CardThemeData(
+          elevation: 0,
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(color: Colors.grey.shade200),
+          ),
+        ),
+
+        // Champs de texte
         inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: couleurPrincipale, width: 2),
+          ),
+          contentPadding:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        ),
+
+        // Boutons principaux
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: couleurPrincipale,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            textStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+            elevation: 0,
+          ),
+        ),
+
+        // Bouton flottant (+)
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: couleurPrincipale,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+
+        // Chips (utilisés pour le niveau des cours)
+        chipTheme: ChipThemeData(
+          backgroundColor: couleurPrincipale.withOpacity(0.1),
+          labelStyle: TextStyle(
+            color: couleurPrincipale,
+            fontWeight: FontWeight.w600,
+          ),
+          side: BorderSide.none,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+
+        // Style du texte général
+        textTheme: const TextTheme(
+          titleLarge: TextStyle(fontWeight: FontWeight.bold),
+          titleMedium: TextStyle(fontWeight: FontWeight.w600),
+          bodyMedium: TextStyle(color: Colors.black87),
         ),
       ),
       home: const _EcranRacine(),
@@ -42,10 +124,6 @@ class MonApplication extends StatelessWidget {
   }
 }
 
-/// Décide automatiquement quel écran afficher selon l'état de connexion :
-/// - Chargement -> écran de chargement
-/// - Utilisateur connecté -> HomeScreen
-/// - Utilisateur non connecté -> LoginScreen
 class _EcranRacine extends ConsumerWidget {
   const _EcranRacine();
 
