@@ -4,6 +4,8 @@ import '../models/cours.dart';
 import '../models/matiere.dart';
 import '../providers/services_provider.dart';
 
+const _kPrimary = Color(0xFF4C6EF5);
+
 class AjouterCoursScreen extends ConsumerStatefulWidget {
   final Matiere matiere;
   final Cours? coursExistant;
@@ -58,7 +60,6 @@ class _AjouterCoursScreenState extends ConsumerState<AjouterCoursScreen> {
       final firestoreService = ref.read(firestoreServiceProvider);
 
       if (isModification) {
-        // MODIFICATION
         await firestoreService.modifierCours(Cours(
           id: widget.coursExistant!.id,
           matiereId: widget.matiere.id,
@@ -70,7 +71,6 @@ class _AjouterCoursScreenState extends ConsumerState<AjouterCoursScreen> {
           createdAt: widget.coursExistant!.createdAt,
         ));
       } else {
-        // AJOUT
         await firestoreService.ajouterCours(Cours(
           id: '',
           matiereId: widget.matiere.id,
@@ -94,13 +94,42 @@ class _AjouterCoursScreenState extends ConsumerState<AjouterCoursScreen> {
     }
   }
 
+  InputDecoration _decoration(String label, IconData icon) {
+    return InputDecoration(
+      labelText: label,
+      prefixIcon: Icon(icon, color: _kPrimary),
+      filled: true,
+      fillColor: Colors.white,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide(color: Colors.grey.shade300),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide(color: Colors.grey.shade300),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: const BorderSide(color: _kPrimary, width: 2),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F6FA),
       appBar: AppBar(
-        title: Text(isModification
-            ? 'Modifier le cours'
-            : 'Nouveau cours - ${widget.matiere.nom}'),
+        title: Text(
+          isModification
+              ? 'Modifier le cours'
+              : 'Nouveau cours - ${widget.matiere.nom}',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: _kPrimary,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -110,46 +139,67 @@ class _AjouterCoursScreenState extends ConsumerState<AjouterCoursScreen> {
             children: [
               TextFormField(
                 controller: _titreController,
-                decoration: const InputDecoration(labelText: 'Titre'),
+                decoration: _decoration('Titre', Icons.title),
                 validator: (v) =>
                 (v == null || v.trim().isEmpty) ? 'Champ requis' : null,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 14),
               TextFormField(
                 controller: _descController,
-                decoration: const InputDecoration(labelText: 'Description'),
+                decoration: _decoration('Description', Icons.notes),
                 maxLines: 3,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 14),
               TextFormField(
                 controller: _professeurController,
-                decoration: const InputDecoration(labelText: 'Professeur'),
+                decoration: _decoration('Professeur', Icons.person_outline),
                 validator: (v) =>
                 (v == null || v.trim().isEmpty) ? 'Champ requis' : null,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 14),
               TextFormField(
                 controller: _dureeController,
-                decoration:
-                const InputDecoration(labelText: 'Durée (heures)'),
+                decoration: _decoration('Durée (heures)', Icons.access_time),
                 keyboardType: TextInputType.number,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 14),
               DropdownButtonFormField<NiveauCours>(
                 initialValue: _niveau,
-                decoration: const InputDecoration(labelText: 'Niveau'),
+                decoration: _decoration('Niveau', Icons.bar_chart),
                 items: NiveauCours.values
                     .map((n) =>
                     DropdownMenuItem(value: n, child: Text(n.label)))
                     .toList(),
                 onChanged: (v) => setState(() => _niveau = v!),
               ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: _enregistrement ? null : _enregistrer,
-                child: _enregistrement
-                    ? const CircularProgressIndicator()
-                    : const Text('Enregistrer'),
+              const SizedBox(height: 28),
+              SizedBox(
+                height: 52,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _kPrimary,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    elevation: 3,
+                  ),
+                  onPressed: _enregistrement ? null : _enregistrer,
+                  child: _enregistrement
+                      ? const SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2.5,
+                    ),
+                  )
+                      : const Text(
+                    'Enregistrer',
+                    style: TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
               ),
             ],
           ),
